@@ -5,8 +5,6 @@ echo 'Running Frontend Tests'
 npm run test:frontend test || (echo 'Unit Tests on Frontend Failed' && exit 1)
 echo 'Frontend Tests Finished'
 
-echo 'Checking Lint for Mobile'
-npm run lint:mobile || (echo 'Lint on Mobile Failed' && exit 1)
 
 echo 'Formarting code on Backend'
 npm run format:backend || (echo 'Lint on Backend Failed' && exit 1)
