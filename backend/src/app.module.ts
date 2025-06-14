@@ -12,6 +12,7 @@ import { MailModule } from './mail/mail.module';
 import { TokenService } from './token/token.service';
 import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -49,6 +50,9 @@ import { WalletModule } from './wallet/wallet.module';
           delay: 1000,
         },
       },
+    }),
+    PrometheusModule.register({
+      path: '/metrics',
     }),
     LoggerModule.forRoot(),
     UsersModule,
