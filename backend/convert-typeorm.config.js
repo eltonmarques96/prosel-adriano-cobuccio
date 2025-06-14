@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 const fs = require('fs');
 const path = require('path');
-const AppDataSource = require('./dist/src/database/typeorm.config').default;
+const AppDataSource = require('./dist/database/typeorm.config').default;
 
 // Função para buscar recursivamente arquivos .entity.js dentro da pasta dist
 function findEntityFiles(dir, fileList = [], baseDir = dir) {

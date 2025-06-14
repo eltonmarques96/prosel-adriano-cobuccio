@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { LoggerModule } from 'nestjs-pino';
@@ -58,8 +56,8 @@ import { WalletModule } from './wallet/wallet.module';
     AuthModule,
     WalletModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, TokenService],
+  controllers: [],
+  providers: [TokenService],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

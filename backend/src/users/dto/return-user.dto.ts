@@ -1,18 +1,25 @@
 import { IsBoolean, IsEmail, IsString } from 'class-validator';
 import { User } from '../entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ReturnUserDto {
+  @ApiProperty()
   @IsString()
   id: string;
+  @ApiProperty()
   @IsString()
   firstName: string;
+  @ApiProperty()
   @IsString()
   lastName: string;
+  @ApiProperty()
   @IsString()
   phone?: string;
-  wallets?: { id: string; balance: number }[];
+  @ApiProperty()
   @IsEmail()
   email: string;
+  @ApiProperty()
+  wallets?: { id: string; balance: number }[];
   @IsBoolean()
   readonly activated: boolean;
 
