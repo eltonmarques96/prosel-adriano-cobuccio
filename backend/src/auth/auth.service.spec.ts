@@ -13,6 +13,8 @@ import * as jwt from 'jsonwebtoken';
 import { UnauthorizedException } from '@nestjs/common';
 import { WalletService } from '@/wallet/wallet.service';
 import { Wallet } from '@/wallet/entities/wallet.entity';
+import { Transaction } from '@/transaction/entities/transaction.entity';
+import { TransactionService } from '@/transaction/transaction.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -22,17 +24,23 @@ describe('AuthService', () => {
     sendUserConfirmation: jest.fn(),
     sendPasswordRecovery: jest.fn(),
   };
+  const mockTransationService = {
+    create: jest.fn(),
+    deposit: jest.fn(),
+    addTransactionToQueue: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot(getTypeOrmConfig()),
-        TypeOrmModule.forFeature([User, Wallet]),
+        TypeOrmModule.forFeature([User, Wallet, Transaction]),
       ],
       providers: [
         AuthGuard,
         UsersService,
         WalletService,
         { provide: MailService, useValue: mockMailService },
+        { provide: TransactionService, useValue: mockTransationService },
         TokenService,
         {
           provide: JwtService,

@@ -1,0 +1,53 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Injectable } from '@nestjs/common';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { Processor, Process, InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Transaction } from './entities/transaction.entity';
+import { Repository } from 'typeorm';
+import { Wallet } from '@/wallet/entities/wallet.entity';
+
+@Injectable()
+@Processor('transaction')
+export class TransactionService {
+  constructor(
+    @InjectRepository(Transaction)
+    private readonly transactionRepository: Repository<Transaction>,
+    @InjectQueue('transaction') private readonly queue: Queue,
+  ) {}
+
+  create(createTransactionDto: CreateTransactionDto) {
+    return 'This action adds a new transaction';
+  }
+
+  async deposit(id: string, amount: number, wallet_id: string) {
+    const transaction = new Transaction();
+    transaction.amount = amount * 100000;
+    transaction.type = 'deposit';
+    transaction.wallet = { id: wallet_id } as Wallet;
+    transaction.sender_wallet = { id: wallet_id } as Wallet;
+    transaction.receiver_wallet = { id: wallet_id } as Wallet;
+    return await this.transactionRepository.save(transaction);
+  }
+
+  @Process('newTransaction')
+  addTransactionToQueue() {}
+
+  findAll() {
+    return `This action returns all transaction`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} transaction`;
+  }
+
+  update(id: number, updateTransactionDto: UpdateTransactionDto) {
+    return `This action updates a #${id} transaction`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} transaction`;
+  }
+}

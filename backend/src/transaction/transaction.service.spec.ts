@@ -1,14 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WalletController } from './wallet.controller';
-import { WalletService } from './wallet.service';
+import { TransactionService } from './transaction.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '@/users/entities/user.entity';
-import { Wallet } from './entities/wallet.entity';
 import { getTypeOrmConfig } from '@/database/typeorm.config';
-import { TransactionService } from '@/transaction/transaction.service';
+import { User } from '@/users/entities/user.entity';
+import { Wallet } from '@/wallet/entities/wallet.entity';
+import { Transaction } from './entities/transaction.entity';
 
-describe('WalletController', () => {
-  let controller: WalletController;
+describe('TransactionService', () => {
+  let service: TransactionService;
   const mockTransationService = {
     create: jest.fn(),
     deposit: jest.fn(),
@@ -16,21 +15,19 @@ describe('WalletController', () => {
   };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [WalletController],
       providers: [
-        WalletService,
         { provide: TransactionService, useValue: mockTransationService },
       ],
       imports: [
         TypeOrmModule.forRoot(getTypeOrmConfig()),
-        TypeOrmModule.forFeature([User, Wallet]),
+        TypeOrmModule.forFeature([User, Wallet, Transaction]),
       ],
     }).compile();
 
-    controller = module.get<WalletController>(WalletController);
+    service = module.get<TransactionService>(TransactionService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });

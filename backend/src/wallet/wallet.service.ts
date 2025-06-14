@@ -4,12 +4,14 @@ import { Wallet } from './entities/wallet.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/users/entities/user.entity';
+import { TransactionService } from '@/transaction/transaction.service';
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
+    private transationService: TransactionService,
   ) {}
   async create(user_id: string): Promise<any> {
     const wallet = new Wallet();

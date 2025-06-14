@@ -1,5 +1,4 @@
 import { Wallet } from '@/wallet/entities/wallet.entity';
-import { ApiProperty } from '@nestjs/swagger';
 import {
   Entity,
   Column,
@@ -14,7 +13,6 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({ example: 'John', description: 'User First Name' })
   @Column({ nullable: false })
   firstName: string;
 

@@ -13,6 +13,7 @@ import { TokenService } from './token/token.service';
 import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     MailModule,
     AuthModule,
     WalletModule,
+    TransactionModule,
   ],
   controllers: [],
   providers: [TokenService],

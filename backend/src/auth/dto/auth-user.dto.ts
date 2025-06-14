@@ -1,3 +1,4 @@
+import { Transaction } from '@/transaction/entities/transaction.entity';
 import { User } from '@/users/entities/user.entity';
 
 export class AuthUserDTO {
@@ -9,7 +10,7 @@ export class AuthUserDTO {
     lastName: string;
     email: string;
     phone?: string;
-    wallets?: { id: string; balance: number }[];
+    wallets?: { id: string; balance: number; transactions: Transaction[] }[];
     activated: boolean;
   } | null;
   error?: string | null;
@@ -39,6 +40,7 @@ export class AuthUserDTO {
         wallets: user?.wallets?.map((wallet) => ({
           id: wallet.id,
           balance: wallet.balance,
+          transactions: wallet.transactions,
         })),
       };
     }

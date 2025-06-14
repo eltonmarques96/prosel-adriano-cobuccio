@@ -11,6 +11,7 @@ import * as jwt from 'jsonwebtoken';
 import { TokenService } from '@/token/token.service';
 import { WalletService } from '@/wallet/wallet.service';
 import { Wallet } from '@/wallet/entities/wallet.entity';
+import { TransactionService } from '@/transaction/transaction.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -35,6 +36,11 @@ describe('UsersController', () => {
     sendUserConfirmation: jest.fn(),
     sendPasswordRecovery: jest.fn(),
   };
+  const mockTransationService = {
+    create: jest.fn(),
+    deposit: jest.fn(),
+    addTransactionToQueue: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -42,6 +48,7 @@ describe('UsersController', () => {
         UsersService,
         TokenService,
         WalletService,
+        { provide: TransactionService, useValue: mockTransationService },
         { provide: MailService, useValue: mockMailService },
       ],
       imports: [
