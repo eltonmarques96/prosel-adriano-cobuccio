@@ -13,6 +13,7 @@ import { UsersModule } from '@users/users.module';
 import { MailModule } from './mail/mail.module';
 import { TokenService } from './token/token.service';
 import { AuthModule } from './auth/auth.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     MailModule,
     AuthModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService, TokenService],

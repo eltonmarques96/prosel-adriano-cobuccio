@@ -11,7 +11,6 @@ import React, {
   useEffect,
 } from "react";
 import md5 from "md5";
-import { toast } from "sonner";
 
 interface AuthContextData {
   user: UserTypes | null;
@@ -19,8 +18,6 @@ interface AuthContextData {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   reloadUserData: () => Promise<void>;
-  deleteDocument: (documentId: string) => Promise<void>;
-  deleteOffice: (officeId: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -98,30 +95,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     router.push("/login");
   }
 
-  async function deleteDocument(documentId: string) {
-    try {
-      setLoading(true);
-      await api.delete(`/documents/${documentId}`);
-      toast("Documento deletado com sucesso");
-      await reloadUserData();
-    } catch (error) {
-      alert("Falha ao deletar documento");
-      console.error("Error deleting document:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function deleteOffice(officeId: string) {
-    try {
-      await api.delete(`/offices/${officeId}`);
-      toast("Escritório deletado com sucesso");
-      await reloadUserData();
-    } catch {
-      alert("Falha ao deletar escritório");
-    }
-  }
-
   return (
     <AuthContext.Provider
       value={{
@@ -131,8 +104,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         logout,
         user,
         reloadUserData,
-        deleteDocument,
-        deleteOffice,
       }}
     >
       {children}

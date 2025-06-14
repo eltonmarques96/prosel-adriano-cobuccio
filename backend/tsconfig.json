@@ -16,7 +16,8 @@
       "@config/*": ["src/config/*"],
       "@mail/*": ["src/mail/*"],
       "@database/*": ["src/database/*"],
-      "@users/*": ["src/users/*"]
+      "@users/*": ["src/users/*"],
+      "@wallet/*": ["src/wallet/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

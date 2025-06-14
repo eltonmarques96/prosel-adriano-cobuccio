@@ -9,6 +9,7 @@ export class AuthUserDTO {
     lastName: string;
     email: string;
     phone?: string;
+    wallets?: { id: string; balance: number }[];
     activated: boolean;
   } | null;
   error?: string | null;
@@ -35,6 +36,10 @@ export class AuthUserDTO {
         email: user.email,
         phone: user?.phone,
         activated: user.activated,
+        wallets: user?.wallets?.map((wallet) => ({
+          id: wallet.id,
+          balance: wallet.balance,
+        })),
       };
     }
   }

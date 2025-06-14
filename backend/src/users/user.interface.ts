@@ -1,3 +1,5 @@
+import { Wallet } from '@/wallet/entities/wallet.entity';
+
 export interface UserInterface {
   id: string;
   firstName: string;
@@ -7,4 +9,5 @@ export interface UserInterface {
   password: string;
   createdAt: string;
   updatedAt: string;
+  wallet: Wallet;
 }

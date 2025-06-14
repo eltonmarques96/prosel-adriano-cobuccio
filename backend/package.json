@@ -19,8 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json --detectOpenHandles",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
-    "migration:generate": "ts-node -r dotenv/config ./node_modules/typeorm/cli.js -d ./src/database/typeorm.config.ts migration:generate ./src/database/migrations/$npm_config_name",
-    "migration:run": "ts-node -r dotenv/config ./node_modules/typeorm/cli.js -d ./src/database/typeorm.config.ts migration:run"
+    "migration:generate": "ts-node -r tsconfig-paths/register -r dotenv/config ./node_modules/typeorm/cli.js -d ./src/database/typeorm.config.ts migration:generate ./src/database/migrations/$npm_config_name",
+    "migration:run": "ts-node -r tsconfig-paths/register -r dotenv/config ./node_modules/typeorm/cli.js -d ./src/database/typeorm.config.ts migration:run"
   },
   "dependencies": {
     "@liaoliaots/nestjs-redis": "^10.0.0",
@@ -92,6 +92,7 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
       "^@users/(.*)$": "<rootDir>/src/users/$1",
+      "^@wallet/(.*)$": "<rootDir>/src/wallet/$1",
       "^@mail/(.*)$": "<rootDir>/src/mail/$1",
       "^@app/(.*)$": "<rootDir>/src/app/$1",
       "^@config/(.*)$": "<rootDir>/src/config/$1"

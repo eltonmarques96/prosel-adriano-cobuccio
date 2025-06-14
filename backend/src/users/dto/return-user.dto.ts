@@ -10,6 +10,7 @@ export class ReturnUserDto {
   lastName: string;
   @IsString()
   phone?: string;
+  wallets?: { id: string; balance: number }[];
   @IsEmail()
   email: string;
   @IsBoolean()
@@ -22,5 +23,9 @@ export class ReturnUserDto {
     this.phone = user.phone;
     this.email = user.email;
     this.activated = user.activated;
+    this.wallets = user.wallets?.map((wallet) => ({
+      id: wallet.id,
+      balance: wallet.balance,
+    }));
   }
 }

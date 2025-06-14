@@ -11,6 +11,8 @@ import { MailService } from '@/mail/mail.service';
 import { TokenService } from '@/token/token.service';
 import * as jwt from 'jsonwebtoken';
 import { UnauthorizedException } from '@nestjs/common';
+import { WalletService } from '@/wallet/wallet.service';
+import { Wallet } from '@/wallet/entities/wallet.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -24,11 +26,12 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot(getTypeOrmConfig()),
-        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([User, Wallet]),
       ],
       providers: [
         AuthGuard,
         UsersService,
+        WalletService,
         { provide: MailService, useValue: mockMailService },
         TokenService,
         {

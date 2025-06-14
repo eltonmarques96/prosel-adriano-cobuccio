@@ -9,6 +9,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { MailService } from '@/mail/mail.service';
 import * as jwt from 'jsonwebtoken';
 import { TokenService } from '@/token/token.service';
+import { WalletService } from '@/wallet/wallet.service';
+import { Wallet } from '@/wallet/entities/wallet.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -39,10 +41,11 @@ describe('UsersController', () => {
       providers: [
         UsersService,
         TokenService,
+        WalletService,
         { provide: MailService, useValue: mockMailService },
       ],
       imports: [
-        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([User, Wallet]),
         TypeOrmModule.forRoot(getTypeOrmConfig()),
       ],
     }).compile();
