@@ -10,15 +10,15 @@ jest.mock("sonner", () => ({
 describe("Login Page", () => {
   it("renders the page", () => {
     render(<LoginPage />);
-    expect(screen.getByPlaceholderText(/email/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/senha/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/E-mail/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Senha/i)).toBeInTheDocument();
     //screen.debug();
   });
 
   it("renders the page and insert information on login and password", () => {
     render(<LoginPage />);
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/senha/i);
+    const emailInput = screen.getByPlaceholderText(/E-mail/i);
+    const passwordInput = screen.getByPlaceholderText(/Senha/i);
 
     fireEvent.change(emailInput, { target: { value: "testuser" } });
     fireEvent.change(passwordInput, { target: { value: "testpass" } });
@@ -30,8 +30,8 @@ describe("Login Page", () => {
   it("chama a função de submit ao enviar o formulário", async () => {
     render(<LoginPage />);
 
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/senha/i);
+    const emailInput = screen.getByPlaceholderText(/E-mail/i);
+    const passwordInput = screen.getByPlaceholderText(/Senha/i);
 
     const submitButton = screen.getByRole("button", { name: /Login/i });
 

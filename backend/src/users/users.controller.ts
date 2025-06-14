@@ -44,12 +44,6 @@ export class UsersController {
   }
 
   @Public()
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Public()
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<ReturnUserDto> {
     return await this.usersService

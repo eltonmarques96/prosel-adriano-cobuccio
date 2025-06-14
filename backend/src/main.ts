@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useLogger(app.get(Logger));
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
-    .setTitle('SaaS Template')
+    .setTitle('Elton Fintech API')
     .setDescription('Dev: Elton Marques')
     .setVersion('1.0')
     .build();

@@ -7,6 +7,7 @@ import { AuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@/users/entities/user.entity';
+import { UsersService } from '@/users/users.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { User } from '@/users/entities/user.entity';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    UsersService,
   ],
   controllers: [AuthController],
   exports: [AuthService],

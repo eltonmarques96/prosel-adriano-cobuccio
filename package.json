@@ -1,5 +1,5 @@
 {
-	"name": "saas-template",
+	"name": "elton-fintech",
 	"version": "1.0.0",
 	"scripts": {
 		"commit": "cz",

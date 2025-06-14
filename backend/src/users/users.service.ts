@@ -48,10 +48,6 @@ export class UsersService {
     return createdUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
   async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findBy({ id });
     if (!user) {
