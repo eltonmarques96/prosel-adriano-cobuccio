@@ -90,4 +90,44 @@ describe('TransactionService', () => {
     expect(user.wallets[0].balance).toEqual(depositValue * 100000);
     expect(user.wallets[0].transactions[0].status).toEqual('completed');
   });
+
+  it('should transfer values between users', async () => {
+    expect(service).toBeDefined();
+    const userParams: CreateUserDto = {
+      firstName: 'John',
+      lastName: 'Lennon',
+      email: 'john.lennon@beatles.com',
+      password: 'password123',
+    };
+    const secondUserParams: CreateUserDto = {
+      firstName: 'Paul',
+      lastName: 'Maccaterny',
+      email: 'Paul.mc@beatles.com',
+      password: 'password123',
+    };
+    const depositValue = 100;
+    const transferValue = 50;
+    expect(UsersService).toBeDefined();
+    await userService.create(userParams);
+    await userService.create(secondUserParams);
+    let firstUser = await userService.findByEmail(userParams.email);
+    let secondUser = await userService.findByEmail(secondUserParams.email);
+    expect(firstUser).toBeDefined();
+    expect(secondUser).toBeDefined();
+    await service.deposit(firstUser.wallets[0].id, depositValue);
+    firstUser = await userService.findByEmail(userParams.email);
+    expect(firstUser.wallets[0].balance).toEqual(depositValue * 100000);
+    expect(firstUser.wallets[0].transactions[0].status).toEqual('completed');
+    await service.transferValue(
+      firstUser.wallets[0].id,
+      secondUser.wallets[0].id,
+      transferValue,
+    );
+    firstUser = await userService.findByEmail(userParams.email);
+    secondUser = await userService.findByEmail(secondUserParams.email);
+    expect(secondUser.wallets[0].balance).toEqual(transferValue * 100000);
+    expect(firstUser.wallets[0].balance).toEqual(
+      (depositValue - transferValue) * 100000,
+    );
+  });
 });

@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Processor, Process, InjectQueue } from '@nestjs/bull';
@@ -40,6 +44,23 @@ export class TransactionService {
     return newTransaction;
   }
 
+  async transferValue(
+    sourceWallet: string,
+    destination_wallet: string,
+    amount: number,
+  ) {
+    const transaction = new Transaction();
+    transaction.amount = amount * 100000;
+    transaction.type = 'transfer';
+    transaction.status = 'pending';
+    transaction.wallet = { id: sourceWallet } as Wallet;
+    transaction.sender_wallet = sourceWallet;
+    transaction.receiver_wallet = destination_wallet;
+    const newTransaction = await this.transactionRepository.save(transaction);
+    await this.queue.add('newTransaction', { transaction: newTransaction });
+    return newTransaction;
+  }
+
   @Process('newTransaction')
   async addTransactionToQueue(job: Job<createTransaction>) {
     const { transaction } = job.data;
@@ -48,6 +69,23 @@ export class TransactionService {
     );
     if (!destinationWallet) {
       throw new NotFoundException(`Wallet not found`);
+    }
+    if (transaction.type === 'transfer') {
+      const senderWallet = await this.walletService.findOne(
+        transaction.sender_wallet,
+      );
+      if (!senderWallet) {
+        throw new NotFoundException(`Wallet not found`);
+      }
+      if (senderWallet.balance < transaction.amount) {
+        throw new NotAcceptableException(
+          `Balance incompatible with Tranfer amount`,
+        );
+      }
+      await this.walletService.update({
+        id: senderWallet.id,
+        balance: (senderWallet.balance -= transaction.amount),
+      });
     }
     await this.walletService.update({
       id: destinationWallet.id,
