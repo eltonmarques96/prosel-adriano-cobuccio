@@ -20,6 +20,13 @@ export class TransactionController {
     return this.transactionService.create(createTransactionDto);
   }
 
+  @Post('/deposit')
+  async deposit(
+    @Body() { wallet_id, amount }: { wallet_id: string; amount: number },
+  ) {
+    return await this.transactionService.deposit(wallet_id, amount);
+  }
+
   @Get()
   findAll() {
     return this.transactionService.findAll();

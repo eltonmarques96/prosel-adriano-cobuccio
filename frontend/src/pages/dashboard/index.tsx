@@ -11,7 +11,7 @@ import {
 import AuthContext from "@/contexts/AuthContext";
 
 function DashboardHome() {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   return (
     <>
       <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
@@ -19,14 +19,7 @@ function DashboardHome() {
           <CardHeader className="relative">
             <CardDescription>Saldo na Carteira</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              R${" "}
-              {user?.wallets
-                .reduce(
-                  (accumulator, wallet) =>
-                    accumulator + wallet.balance / 1000000,
-                  0
-                )
-                .toFixed(2)}
+              {loading ? <></> : <>R$ {user?.totalBalance?.toFixed(2)}</>}
             </CardTitle>
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1 text-sm">

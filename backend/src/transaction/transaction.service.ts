@@ -3,13 +3,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Processor, Process, InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
+import { Job, Queue } from 'bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from './entities/transaction.entity';
 import { Repository } from 'typeorm';
 import { Wallet } from '@/wallet/entities/wallet.entity';
 import { WalletService } from '@/wallet/wallet.service';
 
+interface createTransaction {
+  transaction: Transaction;
+}
 @Injectable()
 @Processor('transaction')
 export class TransactionService {
@@ -30,16 +33,17 @@ export class TransactionService {
     transaction.type = 'deposit';
     transaction.status = 'pending';
     transaction.wallet = { id: wallet_id } as Wallet;
-    transaction.sender_wallet = { id: wallet_id } as Wallet;
-    transaction.receiver_wallet = { id: wallet_id } as Wallet;
-    await this.queue.add('newTransaction', transaction);
+    transaction.sender_wallet = wallet_id;
+    transaction.receiver_wallet = wallet_id;
+    await this.queue.add('newTransaction', { transaction: transaction });
     return await this.transactionRepository.save(transaction);
   }
 
   @Process('newTransaction')
-  async addTransactionToQueue(transaction: Transaction) {
+  async addTransactionToQueue(job: Job<createTransaction>) {
+    const { transaction } = job.data;
     const destinationWallet = await this.walletService.findOne(
-      transaction.receiver_wallet.id,
+      transaction.receiver_wallet,
     );
     if (!destinationWallet) {
       throw new NotFoundException(`Wallet not found`);

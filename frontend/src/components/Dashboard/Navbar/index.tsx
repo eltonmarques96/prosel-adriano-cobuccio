@@ -9,9 +9,9 @@ import {
   FileTextIcon,
   HelpCircleIcon,
   LayoutDashboardIcon,
-  ListIcon,
   SearchIcon,
   SettingsIcon,
+  Wallet,
 } from "lucide-react";
 import {
   Sidebar,
@@ -41,8 +41,8 @@ export function Navbar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: "Carteira",
-        url: "/dashboard/office",
-        icon: ListIcon,
+        url: "/dashboard/wallet",
+        icon: Wallet,
       },
     ],
     navClouds: [

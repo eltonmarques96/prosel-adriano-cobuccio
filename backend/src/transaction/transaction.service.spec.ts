@@ -24,7 +24,8 @@ describe('TransactionService', () => {
     add: jest
       .fn()
       .mockImplementation(async (jobName: string, transaction: Transaction) => {
-        await service.addTransactionToQueue(transaction);
+        const mockJob = { data: transaction } as any;
+        await service.addTransactionToQueue(mockJob);
       }),
   };
   const mockMailService = {

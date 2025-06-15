@@ -11,6 +11,7 @@ import React, {
   useEffect,
 } from "react";
 import md5 from "md5";
+import { WalletTypes } from "@/types/Wallet";
 
 interface AuthContextData {
   user: UserTypes | null;
@@ -18,6 +19,7 @@ interface AuthContextData {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   reloadUserData: () => Promise<void>;
+  depositValue: (value: number) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -51,7 +53,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
           maxAge: 60 * 60 * 24 * 1,
           path: "/",
         });
-        setUser(user);
+        const totalBalance = user?.wallets.reduce(
+          (accumulator: number, wallet: WalletTypes) =>
+            accumulator + wallet.balance / 100000,
+          0
+        );
+        setUser({ ...user, totalBalance: totalBalance });
       } else {
         throw new Error("backend error");
       }
@@ -95,6 +102,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
     router.push("/login");
   }
 
+  async function depositValue(value: number) {
+    try {
+      setLoading(true);
+      await api.post("/transaction/deposit", {
+        wallet_id: user?.wallets[0].id,
+        amount: value,
+      });
+      await reloadUserData();
+      alert("Depósito realizado com sucesso!");
+    } catch {
+      alert("Erro no depósito");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -104,6 +127,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         logout,
         user,
         reloadUserData,
+        depositValue,
       }}
     >
       {children}

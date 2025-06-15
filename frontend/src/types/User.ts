@@ -6,5 +6,6 @@ export interface UserTypes {
   lastName: string;
   email: string;
   phone?: string;
+  totalBalance?: number;
   wallets: WalletTypes[];
 }

@@ -14,19 +14,9 @@ export class Transaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Wallet, (wallet) => wallet.transactions, {
-    eager: true,
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'sender_wallet_id' })
-  sender_wallet: Wallet;
+  sender_wallet: string;
 
-  @ManyToOne(() => Wallet, (wallet) => wallet.transactions, {
-    eager: true,
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'receiver_wallet_id' })
-  receiver_wallet: Wallet;
+  receiver_wallet: string;
 
   @Column({ nullable: false, default: 0 })
   amount: number;
