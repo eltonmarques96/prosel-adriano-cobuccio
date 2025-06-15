@@ -25,6 +25,7 @@ describe('TransactionService', () => {
       .fn()
       .mockImplementation(async (jobName: string, transaction: Transaction) => {
         const mockJob = { data: transaction } as any;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         await service.addTransactionToQueue(mockJob);
       }),
   };
@@ -87,5 +88,6 @@ describe('TransactionService', () => {
     await service.deposit(user.wallets[0].id, depositValue);
     user = await userService.findByEmail(userParams.email);
     expect(user.wallets[0].balance).toEqual(depositValue * 100000);
+    expect(user.wallets[0].transactions[0].status).toEqual('completed');
   });
 });

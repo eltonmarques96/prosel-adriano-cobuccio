@@ -14,8 +14,10 @@ export class Transaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ default: '0' })
   sender_wallet: string;
 
+  @Column({ default: '0' })
   receiver_wallet: string;
 
   @Column({ nullable: false, default: 0 })
@@ -25,7 +27,6 @@ export class Transaction {
   type: string;
 
   @ManyToOne(() => Wallet, (wallet) => wallet.transactions, {
-    eager: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'wallet_id' })

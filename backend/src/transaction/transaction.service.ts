@@ -35,8 +35,9 @@ export class TransactionService {
     transaction.wallet = { id: wallet_id } as Wallet;
     transaction.sender_wallet = wallet_id;
     transaction.receiver_wallet = wallet_id;
-    await this.queue.add('newTransaction', { transaction: transaction });
-    return await this.transactionRepository.save(transaction);
+    const newTransaction = await this.transactionRepository.save(transaction);
+    await this.queue.add('newTransaction', { transaction: newTransaction });
+    return newTransaction;
   }
 
   @Process('newTransaction')
@@ -51,6 +52,9 @@ export class TransactionService {
     await this.walletService.update({
       id: destinationWallet.id,
       balance: (destinationWallet.balance += transaction.amount),
+    });
+    await this.transactionRepository.update(transaction.id, {
+      status: 'completed',
     });
   }
 
