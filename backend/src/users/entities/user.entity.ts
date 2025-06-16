@@ -1,9 +1,11 @@
+import { Wallet } from '@/wallet/entities/wallet.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -37,4 +39,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: string;
+
+  @OneToMany(() => Wallet, (wallet) => wallet.user, { cascade: true })
+  wallets: Wallet[];
 }

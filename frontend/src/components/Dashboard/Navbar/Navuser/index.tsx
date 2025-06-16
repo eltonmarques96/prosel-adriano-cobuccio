@@ -1,6 +1,6 @@
 "use client";
 
-import { CreditCardIcon, LogOutIcon, MoreVerticalIcon } from "lucide-react";
+import { LogOutIcon, MoreVerticalIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,8 +19,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useContext } from "react";
 import AuthContext from "@/contexts/AuthContext";
-import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
-import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -57,7 +55,10 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user?.profilePhoto} alt={user?.firstName} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {user?.firstName[0]}
+                    {user?.lastName[0]}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
@@ -69,15 +70,6 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <Link href="/dashboard/planos">
-                <DropdownMenuItem>
-                  <CreditCardIcon />
-                  Planos
-                </DropdownMenuItem>
-              </Link>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {

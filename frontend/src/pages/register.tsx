@@ -165,6 +165,9 @@ export default function RegisterPage() {
                 </Button>
               </div>
               {error ? <p>{error}</p> : <></>}
+              {loading && (
+                <div className="mt-4 text-center text-sm">Carregando...</div>
+              )}
               <div className="text-center text-sm">
                 Já possui uma conta?{" "}
                 <Link href="/login" className="underline underline-offset-4">

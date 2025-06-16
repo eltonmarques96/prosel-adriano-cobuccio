@@ -21,12 +21,15 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
-      // 💡 See this condition
+    const route: Request = context.switchToHttp().getRequest();
+    const url = route.url;
+
+    if (isPublic || url === '/metrics') {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
+
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
@@ -35,9 +38,8 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET || 'your-secret-key-abc',
       });
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-      request['user'] = payload;
+      request['token'] = token;
+      request['data'] = payload;
     } catch {
       throw new UnauthorizedException();
     }

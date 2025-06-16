@@ -1,0 +1,13 @@
+{
+  "type": "postgres",
+  "port": null,
+  "synchronize": false,
+  "dropSchema": false,
+  "autoLoadEntities": true,
+  "entities": [
+    "dist/transaction/entities/transaction.entity.js",
+    "dist/users/entities/user.entity.js",
+    "dist/wallet/entities/wallet.entity.js"
+  ],
+  "migrations": ["dist/database/migrations/*.{js,ts}"]
+}

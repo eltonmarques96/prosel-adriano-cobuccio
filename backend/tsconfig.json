@@ -16,7 +16,9 @@
       "@config/*": ["src/config/*"],
       "@mail/*": ["src/mail/*"],
       "@database/*": ["src/database/*"],
-      "@users/*": ["src/users/*"]
+      "@users/*": ["src/users/*"],
+      "@wallet/*": ["src/wallet/*"],
+      "@transaction/*": ["src/transaction/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
@@ -25,5 +27,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "exclude": ["dist"]
 }

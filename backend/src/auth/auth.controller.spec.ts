@@ -4,6 +4,7 @@ import { UsersService } from '@/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { WalletService } from '@/wallet/wallet.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -12,6 +13,12 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
+        {
+          provide: WalletService,
+          useValue: {
+            create: jest.fn(),
+          },
+        },
         AuthGuard,
         {
           provide: JwtService,

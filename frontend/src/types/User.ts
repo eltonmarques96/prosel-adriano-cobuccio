@@ -1,19 +1,11 @@
-import { DocumentTypes } from "./Document";
-import { OfficeTypes } from "./Office";
+import { WalletTypes } from "./Wallet";
 
 export interface UserTypes {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  profilePhoto?: string;
-  offices: OfficeTypes[];
-  documents: DocumentTypes[];
-  plan: UserPlans;
-}
-
-enum UserPlans {
-  free = "free",
-  pro = "pro",
-  enterprise = "enterprise",
+  phone?: string;
+  totalBalance?: number;
+  wallets: WalletTypes[];
 }

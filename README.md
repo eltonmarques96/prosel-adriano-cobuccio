@@ -1,35 +1,52 @@
-# Saas Template
-Template with basic CRUD template using NodeJS with OvernightJS (backend), ReactJS (frontend) and Expo (mobile)
+# Fintech Elton Marques
 
-### Functionalites
-- Create User
+## Funcionalidades
+
+- Criação de Usuário
+- Validação de conta via E-mail para habilitar Login
 - Login
-- Validate User
-- Forgot Password
-- Middleware to private route
-- Initial Page of Dashboard
+- Reset de Senha
+- Auth com Middleware com JWT
+- Criação de Carteira de Usuário (wallet)
+- Depósito de Valores
+- Transferência entre carteiras
+- Devolução de valores
 
-## Tools
+## Ferramentas
+
 ### Backend
-#### Tools
-- NodeJS
+
+- NodeJS com NestJS
 - Typescript
-- Overnight JS (Routes)
+- Express
 - Jest (Tests)
 - TypeORM
 - Postgres
-- Pino
-- SQLite (For unit Tests)
+- SQLite (para testes)
+- Pino (Logging)
+
+### Rotas
+
+Grafana - http://localhost:8000/metrics
+Swaggger - http://localhost:8000/docs
+
 ### Frontend
-#### Tools
-- ReactJS with Vite
+
+- ReactJS com NextJS
 - Typescript
-- AdminLTE
+- ShacdnUI
+- Taiwind
 - Axios
-### Mobile
-#### Tools
-- React Native
-- Expo
-- Typescript
-- Style Components
-- Axios
+
+### Rotas
+
+Frontend - http://localhost:3000
+
+### Telas
+
+Registro - ![alt text](register.png)
+Login - ![alt text](login.png)
+Esqueci minha senha - ![alt text](resetdesenha.png)
+Dashboard - ![alt text](dashboard.png)
+Depósito - ![alt text](deposito.png)
+Transferência - ![alt text](transferencia.png)

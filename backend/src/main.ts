@@ -12,9 +12,15 @@ async function bootstrap() {
   app.useLogger(app.get(Logger));
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
-    .setTitle('SaaS Template')
+    .addGlobalResponse({
+      status: 500,
+      description: 'Internal server error',
+    })
+    .setTitle('Elton Fintech API')
     .setDescription('Dev: Elton Marques')
     .setVersion('1.0')
+    .addTag('users')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);

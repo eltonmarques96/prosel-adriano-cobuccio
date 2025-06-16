@@ -11,12 +11,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { MailService } from '@/mail/mail.service';
 import { TokenService } from '@/token/token.service';
+import { WalletService } from '@/wallet/wallet.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly walletService: WalletService,
     private readonly mailService: MailService,
     private readonly tokenService: TokenService,
   ) {}
@@ -30,8 +32,7 @@ export class UsersService {
       );
     }
     const saltOrRounds = 10;
-    const password = 'random_password';
-    const hash = await bcrypt.hash(password, saltOrRounds);
+    const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
     const newUser = {
       ...createUserDto,
       password: hash,
@@ -40,7 +41,9 @@ export class UsersService {
       { email: newUser.email },
       60 * 24,
     );
-    const createdUser = await this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
+    const createdUser = await this.findByEmail(newUser.email);
+    await this.walletService.create(createdUser.id);
     await this.mailService.sendUserConfirmation(
       newUser.email,
       newUser.firstName,
@@ -49,22 +52,21 @@ export class UsersService {
     return createdUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
   async findOne(id: string): Promise<User> {
-    const user = await this.userRepository.findBy({ id });
+    const user = await this.userRepository.findOne({
+      where: { id: id, enabled: true },
+      relations: ['wallets'],
+    });
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
-    return user[0];
+    return user;
   }
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { email },
-      relations: [],
+      where: { email: email, enabled: true },
+      relations: ['wallets'],
     });
     if (!user) {
       throw new NotFoundException(`User with email: ${email} not found`);
@@ -182,10 +184,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
-    const result = await this.userRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`User with ID "${id}" not found`);
-    }
+    await this.userRepository.update(id, { enabled: false });
     return 'User deleted';
   }
 }

@@ -7,6 +7,9 @@ import { getTypeOrmConfig } from '@/database/typeorm.config';
 import { MailService } from '@/mail/mail.service';
 import { TokenService } from '@/token/token.service';
 import * as jwt from 'jsonwebtoken';
+import { Wallet } from '@/wallet/entities/wallet.entity';
+import { WalletService } from '@/wallet/wallet.service';
+import { TransactionService } from '@/transaction/transaction.service';
 
 describe('UsersService', () => {
   let userService: UsersService;
@@ -15,16 +18,23 @@ describe('UsersService', () => {
     sendUserConfirmation: jest.fn(),
     sendPasswordRecovery: jest.fn(),
   };
+  const mockTransationService = {
+    create: jest.fn(),
+    deposit: jest.fn(),
+    addTransactionToQueue: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         TokenService,
+        WalletService,
+        { provide: TransactionService, useValue: mockTransationService },
         { provide: MailService, useValue: mockMailService },
       ],
       imports: [
         TypeOrmModule.forRoot(getTypeOrmConfig()),
-        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([User, Wallet]),
       ],
     }).compile();
 
@@ -52,12 +62,16 @@ describe('UsersService', () => {
     const user = await userService.findByEmail(userParams.email);
     expect(user).toBeDefined();
     expect(user.email).toEqual(userParams.email);
+    expect(user.enabled).toEqual(true);
+    expect(user.activated).toEqual(false);
+    expect(user.wallets[0]).toBeDefined();
+    expect(user.wallets[0].id).toBeDefined();
+    expect(user.wallets[0].user.id).toEqual(user.id);
     expect(mockMailService.sendUserConfirmation).toHaveBeenCalledWith(
       userParams.email,
       userParams.firstName,
       expect.any(String),
     );
-    expect(user.activated).toEqual(false);
   });
 
   it('should not create two users with same email', async () => {

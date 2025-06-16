@@ -1,12 +1,9 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15.2-alpine
     container_name: postgres_db
     restart: always
     environment:
-      - PGUSER=root
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -28,9 +25,39 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD} --protected-mode no
     networks:
       - backend
+  pgadmin:
+    image: dpage/pgadmin4:7.8
+    container_name: pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=oi@oi.com.br
+      - PGADMIN_DEFAULT_PASSWORD=password
+      - TZ=America/Sao_Paulo
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+    networks:
+      - backend
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - '9095:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus-1.yml
 
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - '3001:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
 volumes:
   postgres_data:
+  grafana-data:
 
 networks:
   backend:

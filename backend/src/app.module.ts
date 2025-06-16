@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { LoggerModule } from 'nestjs-pino';
@@ -13,6 +11,9 @@ import { UsersModule } from '@users/users.module';
 import { MailModule } from './mail/mail.module';
 import { TokenService } from './token/token.service';
 import { AuthModule } from './auth/auth.module';
+import { WalletModule } from './wallet/wallet.module';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -51,13 +52,18 @@ import { AuthModule } from './auth/auth.module';
         },
       },
     }),
+    PrometheusModule.register({
+      path: '/metrics',
+    }),
     LoggerModule.forRoot(),
     UsersModule,
     MailModule,
     AuthModule,
+    WalletModule,
+    TransactionModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, TokenService],
+  controllers: [],
+  providers: [TokenService],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}
