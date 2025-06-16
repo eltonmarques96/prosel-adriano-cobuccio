@@ -44,6 +44,20 @@ export class TransactionService {
     return newTransaction;
   }
 
+  async devolution(transaction_id: string) {
+    const old_transaction = await this.findOne(transaction_id);
+    const transaction = new Transaction();
+    transaction.amount = old_transaction.amount;
+    transaction.type = 'devolution';
+    transaction.status = 'pending';
+    transaction.wallet = { id: old_transaction.receiver_wallet } as Wallet;
+    transaction.sender_wallet = old_transaction.receiver_wallet;
+    transaction.receiver_wallet = old_transaction.sender_wallet;
+    const newTransaction = await this.transactionRepository.save(transaction);
+    await this.queue.add('newTransaction', { transaction: newTransaction });
+    return newTransaction;
+  }
+
   async transferValue(
     sourceWallet: string,
     destination_wallet: string,
@@ -68,16 +82,25 @@ export class TransactionService {
       transaction.receiver_wallet,
     );
     if (!destinationWallet) {
+      await this.transactionRepository.update(transaction.id, {
+        status: 'canceled',
+      });
       throw new NotFoundException(`Wallet not found`);
     }
-    if (transaction.type === 'transfer') {
+    if (transaction.type === 'transfer' || transaction.type === 'devolution') {
       const senderWallet = await this.walletService.findOne(
         transaction.sender_wallet,
       );
       if (!senderWallet) {
+        await this.transactionRepository.update(transaction.id, {
+          status: 'canceled',
+        });
         throw new NotFoundException(`Wallet not found`);
       }
       if (senderWallet.balance < transaction.amount) {
+        await this.transactionRepository.update(transaction.id, {
+          status: 'canceled',
+        });
         throw new NotAcceptableException(
           `Balance incompatible with Tranfer amount`,
         );
@@ -100,8 +123,14 @@ export class TransactionService {
     return `This action returns all transaction`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
+  async findOne(id: string): Promise<Transaction> {
+    const transaction = await this.transactionRepository.findOne({
+      where: { id: id },
+    });
+    if (!transaction) {
+      throw new NotFoundException(`User not found`);
+    }
+    return transaction;
   }
 
   update(id: number, updateTransactionDto: UpdateTransactionDto) {

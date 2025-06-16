@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import AddBalanceDialog from "../../../pages/addBalanceDialog/index";
 import AuthContext from "@/contexts/AuthContext";
+import TransferValueDialog from "@/pages/transferValueDialog";
 
 const Header: React.FC = () => {
   const { setTheme } = useTheme();
@@ -54,6 +55,10 @@ const Header: React.FC = () => {
               orientation="vertical"
               className="mx-2 data-[orientation=vertical]:h-4"
             />
+            <div className="ml-auto flex items-center gap-2">
+              <PlusCircle />
+              <TransferValueDialog />
+            </div>
             <div className="ml-auto flex items-center gap-2">
               <PlusCircle />
               <AddBalanceDialog />

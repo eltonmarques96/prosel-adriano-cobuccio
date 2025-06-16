@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import api from "@/services/api";
 import { UserTypes } from "@/types/User";
 import { useRouter } from "next/router";
@@ -20,6 +19,7 @@ interface AuthContextData {
   signIn: (email: string, password: string) => Promise<void>;
   reloadUserData: () => Promise<void>;
   depositValue: (value: number) => Promise<void>;
+  transferValue: (destinationWallet: string, value: number) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -118,6 +118,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function transferValue(destinationWallet: string, value: number) {
+    try {
+      setLoading(true);
+      await api.post("/transaction/transfer", {
+        sourceWallet: user?.wallets[0].id,
+        destination_wallet: destinationWallet,
+        amount: value,
+      });
+      await reloadUserData();
+      alert("Transferência realizada com sucesso!");
+    } catch {
+      alert("Erro na transferência");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -128,6 +145,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         user,
         reloadUserData,
         depositValue,
+        transferValue,
       }}
     >
       {children}
@@ -138,6 +156,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export const useAuth = (): AuthContextData => {
   const context = useContext(AuthContext);
   if (!context) {
+    console.log("useAuth must be used within an AuthProvider");
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;

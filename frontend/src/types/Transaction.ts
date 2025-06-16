@@ -1,5 +1,8 @@
 export interface TransactionTypes {
   id: string;
-  enabled: boolean;
+  sender_wallet?: string;
+  receiver_wallet?: string;
+  status: string;
+  type: string;
   amount: number;
 }

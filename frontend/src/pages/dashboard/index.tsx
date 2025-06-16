@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import AuthContext from "@/contexts/AuthContext";
+import TransactionsTable from "@/components/Dashboard/TransactionTable";
 
 function DashboardHome() {
   const { user, loading } = useContext(AuthContext);
@@ -29,6 +30,7 @@ function DashboardHome() {
           </CardFooter>
         </Card>
       </div>
+      <TransactionsTable />
     </>
   );
 }

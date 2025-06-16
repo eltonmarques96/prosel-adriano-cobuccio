@@ -1,52 +1,91 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
-  }
-
   @Post('/deposit')
+  @ApiOperation({ summary: 'Deposit value in wallet' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        sourceWallet: {
+          type: 'string',
+        },
+        destination_wallet: {
+          type: 'string',
+        },
+        amount: {
+          type: 'number',
+        },
+      },
+      required: ['sourceWallet', 'destination_wallet', 'amount'],
+    },
+  })
   async deposit(
     @Body() { wallet_id, amount }: { wallet_id: string; amount: number },
   ) {
     return await this.transactionService.deposit(wallet_id, amount);
   }
 
-  @Get()
-  findAll() {
-    return this.transactionService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
+  @Post('/transfer')
+  @ApiOperation({ summary: 'Transfer values between wallets' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        sourceWallet: {
+          type: 'string',
+        },
+        destination_wallet: {
+          type: 'string',
+        },
+        amount: {
+          type: 'number',
+        },
+      },
+      required: ['sourceWallet', 'destination_wallet', 'amount'],
+    },
+  })
+  async transfer(
+    @Body()
+    {
+      sourceWallet,
+      destination_wallet,
+      amount,
+    }: {
+      sourceWallet: string;
+      destination_wallet: string;
+      amount: number;
+    },
   ) {
-    return this.transactionService.update(+id, updateTransactionDto);
+    return await this.transactionService.transferValue(
+      sourceWallet,
+      destination_wallet,
+      amount,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionService.remove(+id);
+  @Post('/devolution')
+  @ApiOperation({ summary: 'Devolution of value' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        transaction_id: {
+          type: 'string',
+        },
+      },
+      required: ['transaction_id'],
+    },
+  })
+  async devolution(
+    @Body()
+    { transaction_id }: { transaction_id: string },
+  ) {
+    return await this.transactionService.devolution(transaction_id);
   }
 }

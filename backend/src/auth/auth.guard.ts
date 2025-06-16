@@ -21,7 +21,10 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
+    const route: Request = context.switchToHttp().getRequest();
+    const url = route.url;
+
+    if (isPublic || url === '/metrics') {
       return true;
     }
 
